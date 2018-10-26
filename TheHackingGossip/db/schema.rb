@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_25_161100) do
+ActiveRecord::Schema.define(version: 2018_10_26_145840) do
 
   create_table "cities", force: :cascade do |t|
     t.string "name"
@@ -21,10 +21,11 @@ ActiveRecord::Schema.define(version: 2018_10_25_161100) do
   create_table "comments", force: :cascade do |t|
     t.text "content"
     t.integer "user_id"
-    t.integer "gossip_id"
+    t.string "commenteable_type"
+    t.integer "commenteable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["gossip_id"], name: "index_comments_on_gossip_id"
+    t.index ["commenteable_type", "commenteable_id"], name: "index_comments_on_commenteable_type_and_commenteable_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
@@ -46,20 +47,29 @@ ActiveRecord::Schema.define(version: 2018_10_25_161100) do
   end
 
   create_table "likes", force: :cascade do |t|
+    t.integer "user_id"
     t.string "likeable_type"
     t.integer "likeable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable_type_and_likeable_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "multirecipients", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "private_message_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["private_message_id"], name: "index_multirecipients_on_private_message_id"
+    t.index ["user_id"], name: "index_multirecipients_on_user_id"
   end
 
   create_table "private_messages", force: :cascade do |t|
     t.text "content"
     t.integer "sender_id"
-    t.integer "receiver_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["receiver_id"], name: "index_private_messages_on_receiver_id"
     t.index ["sender_id"], name: "index_private_messages_on_sender_id"
   end
 
